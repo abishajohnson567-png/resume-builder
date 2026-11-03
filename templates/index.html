@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Builder — Professional</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- ════════ HEADER ════════ -->
+<header class="site-header">
+  <a class="logo" href="#">
+    <div class="logo-mark">R</div>
+    <span class="logo-text">Resume<span>Craft</span></span>
+  </a>
+  <div class="nav-actions">
+    <button class="btn btn-ghost btn-sm" onclick="openModal()"><i class="fas fa-folder-open"></i> My Resumes</button>
+    <button class="btn btn-outline btn-sm" onclick="printResume()"><i class="fas fa-print"></i> Print</button>
+    <button class="btn btn-primary btn-sm" onclick="saveResume()"><i class="fas fa-cloud-upload-alt"></i> Save</button>
+  </div>
+</header>
+
+<!-- ════════ APP LAYOUT ════════ -->
+<div class="app-layout">
+
+  <!-- ══ LEFT: FORM PANEL ══ -->
+  <aside class="form-panel">
+
+    <!-- Completion Bar -->
+    <div class="completion-bar">
+      <span class="completion-text" id="completionPct">0% complete</span>
+      <div class="completion-track"><div class="completion-fill" id="completionFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- TABS -->
+    <div class="tabs-bar" id="tabsBar">
+      <button class="tab-btn active" data-tab="basics" onclick="switchTab('basics',this)">
+        <span class="tab-icon">👤</span>Basics
+      </button>
+      <button class="tab-btn" data-tab="summary" onclick="switchTab('summary',this)">
+        <span class="tab-icon">📝</span>Summary
+      </button>
+      <button class="tab-btn" data-tab="experience" onclick="switchTab('experience',this)">
+        <span class="tab-icon">💼</span>Experience
+      </button>
+      <button class="tab-btn" data-tab="education" onclick="switchTab('education',this)">
+        <span class="tab-icon">🎓</span>Education
+      </button>
+      <button class="tab-btn" data-tab="skills" onclick="switchTab('skills',this)">
+        <span class="tab-icon">⚡</span>Skills
+      </button>
+      <button class="tab-btn" data-tab="projects" onclick="switchTab('projects',this)">
+        <span class="tab-icon">🚀</span>Projects
+      </button>
+      <button class="tab-btn" data-tab="certifications" onclick="switchTab('certifications',this)">
+        <span class="tab-icon">🏆</span>Certs
+      </button>
+      <button class="tab-btn" data-tab="languages" onclick="switchTab('languages',this)">
+        <span class="tab-icon">🌐</span>Languages
+      </button>
+      <button class="tab-btn" data-tab="interests" onclick="switchTab('interests',this)">
+        <span class="tab-icon">💡</span>Interests
+      </button>
+      <button class="tab-btn" data-tab="references" onclick="switchTab('references',this)">
+        <span class="tab-icon">📋</span>References
+      </button>
+      <button class="tab-btn" data-tab="design" onclick="switchTab('design',this)">
+        <span class="tab-icon">🎨</span>Design
+      </button>
+    </div>
+
+    <!-- ──────── TAB: BASICS ──────── -->
+    <div class="tab-content active" id="tab-basics">
+      <div class="section-heading"><span>📷</span> Photo & Personal Info</div>
+
+      <div class="form-group">
+        <div class="photo-upload-area" id="photoUploadArea" onclick="document.getElementById('photoInput').click()">
+          <input type="file" id="photoInput" accept="image/*" onchange="handlePhotoUpload(event)" />
+          <img class="photo-preview" id="photoPreview" src="" alt="Profile" />
+          <div class="photo-placeholder" id="photoPlaceholder">📷</div>
+          <div class="photo-upload-text">
+            <strong>Click to upload photo</strong>
+            Supported: JPG, PNG, WEBP (max 2MB)
+          </div>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="margin-top:.5rem;color:var(--danger)" onclick="removePhoto()" id="removePhotoBtn" hidden>
+          <i class="fas fa-trash-alt"></i> Remove photo
+        </button>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name *</label>
+          <input type="text" id="firstName" placeholder="John" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Last Name *</label>
+          <input type="text" id="lastName" placeholder="Doe" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Job Title / Headline *</label>
+        <input type="text" id="jobTitle" placeholder="Senior Software Engineer" oninput="updatePreview()" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" id="email" placeholder="john@example.com" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="phone" placeholder="+1 (555) 000-0000" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="city" placeholder="New York" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>State / Country</label>
+          <input type="text" id="country" placeholder="USA" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>LinkedIn URL</label>
+          <input type="url" id="linkedin" placeholder="linkedin.com/in/johndoe" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>GitHub / Portfolio</label>
+          <input type="url" id="github" placeholder="github.com/johndoe" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Website / Portfolio URL</label>
+        <input type="url" id="website" placeholder="https://johndoe.com" oninput="updatePreview()" />
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Date of Birth</label>
+          <input type="date" id="dob" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Nationality</label>
+          <input type="text" id="nationality" placeholder="American" oninput="updatePreview()" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Driving License</label>
+          <input type="text" id="license" placeholder="Class B" oninput="updatePreview()" />
+        </div>
+        <div class="form-group">
+          <label>Marital Status</label>
+          <select id="marital" onchange="updatePreview()">
+            <option value="">— Select —</option>
+            <option>Single</option>
+            <option>Married</option>
+            <option>Divorced</option>
+            <option>Widowed</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────── TAB: SUMMARY ──────── -->
+    <div class="tab-content" id="tab-summary">
+      <div class="section-heading"><span>📝</span> Professional Summary</div>
+      <div class="form-group">
+        <label>Summary / Objective</label>
+        <textarea id="summary" rows="6" placeholder="Write a compelling professional summary that highlights your key strengths, years of experience, and career goals..." oninput="updatePreview()"></textarea>
+      </div>
+      <div class="form-group">
+        <label>Core Competencies (shown in sidebar)</label>
+        <div class="skills-container" id="coreSkillsContainer">
+          <input type="text" class="skill-input" id="coreSkillInput" placeholder="Type & press Enter…" onkeydown="addSkillTag(event,'coreSkillsContainer','coreSkillInput','coreSkills')" />
+        </div>
+      </div>
+    </div>
+
+    <!-- ──────── TAB: EXPERIENCE ──────── -->
+    <div class="tab-content" id="tab-experience">
+      <div class="section-heading"><span>💼</span> Work Experience</div>
+      <div id="experienceList"></div>
+      <button class="add-entry-btn" onclick="addExperience()"><i class="fas fa-plus"></i> Add Work Experience</button>
+    </div>
+
+    <!-- ──────── TAB: EDUCATION ──────── -->
+    <div class="tab-content" id="tab-education">
+      <div class="section-heading"><span>🎓</span> Education</div>
+      <div id="educationList"></div>
+      <button class="add-entry-btn" onclick="addEducation()"><i class="fas fa-plus"></i> Add Education</button>
+    </div>
+
+    <!-- ──────── TAB: SKILLS ──────── -->
+    <div class="tab-content" id="tab-skills">
+      <div class="section-heading"><span>⚡</span> Technical Skills</div>
+      <p style="font-size:.83rem;color:var(--silver);margin-bottom:1rem;">Add skills with proficiency levels (shown as bars in sidebar)</p>
+      <div id="skillsList"></div>
+      <button class="add-entry-btn" onclick="addSkill()"><i class="fas fa-plus"></i> Add Skill</button>
+
+      <div class="section-heading" style="margin-top:2rem"><span>🤝</span> Soft Skills</div>
+      <div class="skills-container" id="softSkillsContainer">
+        <input type="text" class="skill-input" id="softSkillInput" placeholder="Leadership, Teamwork…" onkeydown="addSkillTag(event,'softSkillsContainer','softSkillInput','softSkills')" />
+      </div>
+    </div>
+
+    <!-- ──────── TAB: PROJECTS ──────── -->
+    <div class="tab-content" id="tab-projects">
+      <div class="section-heading"><span>🚀</span> Projects</div>
+      <div id="projectsList"></div>
+      <button class="add-entry-btn" onclick="addProject()"><i class="fas fa-plus"></i> Add Project</button>
+    </div>
+
+    <!-- ──────── TAB: CERTIFICATIONS ──────── -->
+    <div class="tab-content" id="tab-certifications">
+      <div class="section-heading"><span>🏆</span> Certifications & Awards</div>
+      <div id="certsList"></div>
+      <button class="add-entry-btn" onclick="addCert()"><i class="fas fa-plus"></i> Add Certification</button>
+    </div>
+
+    <!-- ──────── TAB: LANGUAGES ──────── -->
+    <div class="tab-content" id="tab-languages">
+      <div class="section-heading"><span>🌐</span> Languages</div>
+      <div id="languagesList"></div>
+      <button class="add-entry-btn" onclick="addLanguage()"><i class="fas fa-plus"></i> Add Language</button>
+    </div>
+
+    <!-- ──────── TAB: INTERESTS ──────── -->
+    <div class="tab-content" id="tab-interests">
+      <div class="section-heading"><span>💡</span> Interests & Hobbies</div>
+      <div class="skills-container" id="interestsContainer">
+        <input type="text" class="skill-input" id="interestInput" placeholder="Photography, Hiking…" onkeydown="addSkillTag(event,'interestsContainer','interestInput','interests')" />
+      </div>
+    </div>
+
+    <!-- ──────── TAB: REFERENCES ──────── -->
+    <div class="tab-content" id="tab-references">
+      <div class="section-heading"><span>📋</span> References</div>
+      <div id="referencesList"></div>
+      <button class="add-entry-btn" onclick="addReference()"><i class="fas fa-plus"></i> Add Reference</button>
+      <div class="form-group" style="margin-top:1rem">
+        <label>
+          <input type="checkbox" id="refOnRequest" onchange="updatePreview()" style="width:auto;margin-right:.5rem" />
+          Show "References available upon request"
+        </label>
+      </div>
+    </div>
+
+    <!-- ──────── TAB: DESIGN ──────── -->
+    <div class="tab-content" id="tab-design">
+      <div class="section-heading"><span>🎨</span> Design & Style</div>
+
+      <div class="form-group">
+        <label>Color Theme</label>
+        <div class="color-picker-row">
+          <div class="color-swatch active" style="background:#1a1a18" title="Midnight Gold" onclick="setTheme('gold',this)"></div>
+          <div class="color-swatch" style="background:#0d1f3c" title="Navy Blue" onclick="setTheme('navy',this)"></div>
+          <div class="color-swatch" style="background:#1a3025" title="Forest Green" onclick="setTheme('forest',this)"></div>
+          <div class="color-swatch" style="background:#2d0a0a" title="Burgundy" onclick="setTheme('burgundy',this)"></div>
+          <div class="color-swatch" style="background:#1e2a3a" title="Slate" onclick="setTheme('slate',this)"></div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Font Style</label>
+        <select id="fontStyle" onchange="setFont(this.value)">
+          <option value="font-classic">Classic Serif (Playfair)</option>
+          <option value="font-modern">Modern Sans</option>
+          <option value="font-minimal">Minimal Mono</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Layout</label>
+        <select id="layoutStyle" onchange="setLayout(this.value)">
+          <option value="layout-two-col">Two Column (Sidebar)</option>
+          <option value="layout-full">Full Width</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Resume Name (for saving)</label>
+        <input type="text" id="resumeName" placeholder="My Software Engineer Resume" />
+      </div>
+
+      <div class="form-group">
+        <label>Sections to Show</label>
+        <div style="display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem">
+          <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+            <input type="checkbox" id="showSummary" checked onchange="updatePreview()" style="width:auto;margin-right:.5rem" /> Professional Summary
+          </label>
+          <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+            <input type="checkbox" id="showProjects" checked onchange="updatePreview()" style="width:auto;margin-right:.5rem" /> Projects
+          </label>
+          <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+            <input type="checkbox" id="showCerts" checked onchange="updatePreview()" style="width:auto;margin-right:.5rem" /> Certifications
+          </label>
+          <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+            <input type="checkbox" id="showInterests" checked onchange="updatePreview()" style="width:auto;margin-right:.5rem" /> Interests
+          </label>
+          <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+            <input type="checkbox" id="showReferences" checked onchange="updatePreview()" style="width:auto;margin-right:.5rem" /> References
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel Footer -->
+    <div class="panel-footer">
+      <button class="btn btn-primary btn-full" onclick="saveResume()">
+        <i class="fas fa-cloud-upload-alt"></i> Save Resume
+      </button>
+      <button class="btn btn-outline" onclick="clearAll()" title="Start fresh"><i class="fas fa-redo"></i></button>
+    </div>
+  </aside>
+
+  <!-- ══ RIGHT: PREVIEW PANEL ══ -->
+  <main class="preview-panel">
+    <div class="preview-toolbar">
+      <span class="preview-label"><i class="fas fa-eye" style="font-size:.7rem"></i>&nbsp; Live Preview</span>
+      <div style="display:flex;gap:.75rem">
+        <button class="btn btn-outline btn-sm" onclick="printResume()"><i class="fas fa-print"></i> Print / PDF</button>
+      </div>
+    </div>
+
+    <!-- THE RESUME -->
+    <div class="resume-paper theme-gold font-classic layout-two-col" id="resumePaper">
+
+      <!-- Header -->
+      <div class="resume-header">
+        <div class="resume-header-inner">
+          <img class="resume-photo" id="previewPhoto" src="" alt="" />
+          <div class="resume-name-block">
+            <div class="resume-full-name" id="previewName">Your Name</div>
+            <div class="resume-job-title" id="previewTitle">Job Title</div>
+            <div class="resume-contacts" id="previewContacts"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Body -->
+      <div class="resume-body">
+        <!-- Main -->
+        <div class="resume-main">
+
+          <!-- Summary -->
+          <div class="resume-section" id="sectionSummary">
+            <div class="resume-section-title">Professional Summary</div>
+            <div class="resume-summary" id="previewSummary"></div>
+          </div>
+
+          <!-- Experience -->
+          <div class="resume-section" id="sectionExperience">
+            <div class="resume-section-title">Work Experience</div>
+            <div id="previewExperience"></div>
+          </div>
+
+          <!-- Projects -->
+          <div class="resume-section" id="sectionProjects">
+            <div class="resume-section-title">Projects</div>
+            <div id="previewProjects"></div>
+          </div>
+
+          <!-- References (main) -->
+          <div class="resume-section" id="sectionReferences">
+            <div class="resume-section-title">References</div>
+            <div id="previewReferences"></div>
+          </div>
+
+        </div>
+
+        <!-- Sidebar -->
+        <div class="resume-sidebar">
+
+          <!-- Education -->
+          <div class="resume-section">
+            <div class="resume-section-title">Education</div>
+            <div id="previewEducation"></div>
+          </div>
+
+          <!-- Technical Skills -->
+          <div class="resume-section">
+            <div class="resume-section-title">Tech Skills</div>
+            <div id="previewSkills"></div>
+          </div>
+
+          <!-- Core Competencies -->
+          <div class="resume-section" id="sectionCore">
+            <div class="resume-section-title">Competencies</div>
+            <div class="sidebar-tags" id="previewCoreSkills"></div>
+          </div>
+
+          <!-- Soft Skills -->
+          <div class="resume-section" id="sectionSoft">
+            <div class="resume-section-title">Soft Skills</div>
+            <div class="sidebar-tags" id="previewSoftSkills"></div>
+          </div>
+
+          <!-- Languages -->
+          <div class="resume-section" id="sectionLanguages">
+            <div class="resume-section-title">Languages</div>
+            <div id="previewLanguages"></div>
+          </div>
+
+          <!-- Certifications -->
+          <div class="resume-section" id="sectionCerts">
+            <div class="resume-section-title">Certifications</div>
+            <div id="previewCerts"></div>
+          </div>
+
+          <!-- Interests -->
+          <div class="resume-section" id="sectionInterests">
+            <div class="resume-section-title">Interests</div>
+            <div class="interests-grid" id="previewInterests"></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ════════ MODAL: MY RESUMES ════════ -->
+<div class="modal-overlay" id="savedModal" onclick="closeModalOut(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">My Saved Resumes</span>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="savedResumesList"><p style="color:var(--silver);font-size:.88rem;text-align:center;padding:2rem">Loading…</p></div>
+  </div>
+</div>
+
+<!-- ════════ TOAST CONTAINER ════════ -->
+<div class="toast-container" id="toastContainer"></div>
+
+
+<script>
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const state = {
+  photo: null,
+  coreSkills: [],
+  softSkills: [],
+  interests: [],
+  skills: [],
+  experience: [],
+  education: [],
+  projects: [],
+  certs: [],
+  languages: [],
+  references: [],
+  theme: 'gold',
+  font: 'font-classic',
+  layout: 'layout-two-col',
+  currentId: null
+};
+
+// ══════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════
+//  PHOTO
+// ══════════════════════════════════════════════
+function handlePhotoUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('Photo must be under 2MB', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    state.photo = ev.target.result;
+    document.getElementById('photoPreview').src = state.photo;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoPlaceholder').style.display = 'none';
+    document.getElementById('photoUploadArea').classList.add('has-photo');
+    document.getElementById('removePhotoBtn').hidden = false;
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+}
+
+function removePhoto() {
+  state.photo = null;
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('photoPlaceholder').style.display = 'block';
+  document.getElementById('photoUploadArea').classList.remove('has-photo');
+  document.getElementById('removePhotoBtn').hidden = true;
+  document.getElementById('photoInput').value = '';
+  updatePreview();
+}
+
+// ══════════════════════════════════════════════
+//  SKILL TAGS
+// ══════════════════════════════════════════════
+function addSkillTag(e, containerId, inputId, stateKey) {
+  if (e.key !== 'Enter' && e.key !== ',') return;
+  e.preventDefault();
+  const input = document.getElementById(inputId);
+  const val = input.value.trim().replace(/,$/, '');
+  if (!val) return;
+  state[stateKey].push(val);
+  input.value = '';
+  renderTagsInContainer(containerId, inputId, stateKey);
+  updatePreview();
+}
+
+function renderTagsInContainer(containerId, inputId, stateKey) {
+  const container = document.getElementById(containerId);
+  const input = document.getElementById(inputId);
+  container.innerHTML = '';
+  state[stateKey].forEach((tag, i) => {
+    const span = document.createElement('span');
+    span.className = 'skill-tag';
+    span.innerHTML = `${tag}<button onclick="removeTag('${stateKey}',${i},'${containerId}','${inputId}')">×</button>`;
+    container.appendChild(span);
+  });
+  container.appendChild(input);
+}
+
+function removeTag(stateKey, idx, containerId, inputId) {
+  state[stateKey].splice(idx, 1);
+  renderTagsInContainer(containerId, inputId, stateKey);
+  updatePreview();
+}
+
+// ══════════════════════════════════════════════
+//  EXPERIENCE
+// ══════════════════════════════════════════════
+function addExperience() {
+  const id = Date.now();
+  state.experience.push({ id, company:'', role:'', startDate:'', endDate:'', current:false, location:'', description:'' });
+  renderExperienceList();
+  updatePreview();
+}
+
+function renderExperienceList() {
+  const list = document.getElementById('experienceList');
+  list.innerHTML = '';
+  state.experience.forEach((exp, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Experience ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('experience',${i})">×</button>
+      </div>
+      <div class="form-group"><label>Job Title / Role</label>
+        <input type="text" value="${exp.role}" placeholder="Software Engineer" oninput="updateField('experience',${i},'role',this.value)" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Company Name</label>
+          <input type="text" value="${exp.company}" placeholder="Google Inc." oninput="updateField('experience',${i},'company',this.value)" /></div>
+        <div class="form-group"><label>Location</label>
+          <input type="text" value="${exp.location}" placeholder="San Francisco, CA" oninput="updateField('experience',${i},'location',this.value)" /></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Start Date</label>
+          <input type="date" value="${exp.startDate}" oninput="updateField('experience',${i},'startDate',this.value)" /></div>
+        <div class="form-group"><label>End Date</label>
+          <input type="date" value="${exp.endDate}" ${exp.current?'disabled':''} oninput="updateField('experience',${i},'endDate',this.value)" id="endDate_${exp.id}" /></div>
+      </div>
+      <div class="form-group">
+        <label style="text-transform:none;letter-spacing:0;font-size:.88rem;color:var(--charcoal);font-weight:400;cursor:pointer">
+          <input type="checkbox" ${exp.current?'checked':''} style="width:auto;margin-right:.5rem"
+            onchange="updateField('experience',${i},'current',this.checked);document.getElementById('endDate_${exp.id}').disabled=this.checked;updatePreview();" />
+          Currently working here
+        </label>
+      </div>
+      <div class="form-group"><label>Key Responsibilities / Achievements</label>
+        <textarea placeholder="• Led a team of 5 engineers to deliver X feature&#10;• Increased performance by 40% through optimization" oninput="updateField('experience',${i},'description',this.value)">${exp.description}</textarea>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  EDUCATION
+// ══════════════════════════════════════════════
+function addEducation() {
+  state.education.push({ school:'', degree:'', field:'', startYear:'', endYear:'', gpa:'', honors:'' });
+  renderEducationList();
+  updatePreview();
+}
+
+function renderEducationList() {
+  const list = document.getElementById('educationList');
+  list.innerHTML = '';
+  state.education.forEach((edu, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Education ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('education',${i})">×</button>
+      </div>
+      <div class="form-group"><label>Institution / School</label>
+        <input type="text" value="${edu.school}" placeholder="MIT" oninput="updateField('education',${i},'school',this.value)" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Degree</label>
+          <select onchange="updateField('education',${i},'degree',this.value)">
+            <option ${edu.degree===''?'selected':''}>— Select —</option>
+            <option ${edu.degree==='High School Diploma'?'selected':''}>High School Diploma</option>
+            <option ${edu.degree==='Associate'?'selected':''}>Associate</option>
+            <option ${edu.degree==='Bachelor'?'selected':''}>Bachelor</option>
+            <option ${edu.degree==='Master'?'selected':''}>Master</option>
+            <option ${edu.degree==='MBA'?'selected':''}>MBA</option>
+            <option ${edu.degree==='Ph.D'?'selected':''}>Ph.D</option>
+            <option ${edu.degree==='Other'?'selected':''}>Other</option>
+          </select></div>
+        <div class="form-group"><label>Field of Study</label>
+          <input type="text" value="${edu.field}" placeholder="Computer Science" oninput="updateField('education',${i},'field',this.value)" /></div>
+      </div>
+      <div class="form-row three">
+        <div class="form-group"><label>Start Year</label>
+          <input type="number" value="${edu.startYear}" placeholder="2018" min="1950" max="2030" oninput="updateField('education',${i},'startYear',this.value)" /></div>
+        <div class="form-group"><label>End Year</label>
+          <input type="number" value="${edu.endYear}" placeholder="2022" min="1950" max="2030" oninput="updateField('education',${i},'endYear',this.value)" /></div>
+        <div class="form-group"><label>GPA</label>
+          <input type="text" value="${edu.gpa}" placeholder="3.8 / 4.0" oninput="updateField('education',${i},'gpa',this.value)" /></div>
+      </div>
+      <div class="form-group"><label>Honors / Achievements</label>
+        <input type="text" value="${edu.honors}" placeholder="Cum Laude, Dean's List" oninput="updateField('education',${i},'honors',this.value)" /></div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  SKILLS (with proficiency)
+// ══════════════════════════════════════════════
+function addSkill() {
+  state.skills.push({ name:'', level:80 });
+  renderSkillsList();
+  updatePreview();
+}
+
+function renderSkillsList() {
+  const list = document.getElementById('skillsList');
+  list.innerHTML = '';
+  state.skills.forEach((sk, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Skill ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('skills',${i})">×</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Skill Name</label>
+          <input type="text" value="${sk.name}" placeholder="JavaScript" oninput="updateField('skills',${i},'name',this.value)" /></div>
+        <div class="form-group"><label>Proficiency: ${sk.level}%</label>
+          <input type="range" min="10" max="100" step="5" value="${sk.level}" oninput="updateField('skills',${i},'level',+this.value);this.previousElementSibling.textContent='Proficiency: '+this.value+'%'" /></div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  PROJECTS
+// ══════════════════════════════════════════════
+function addProject() {
+  state.projects.push({ name:'', tech:'', url:'', description:'' });
+  renderProjectsList();
+  updatePreview();
+}
+
+function renderProjectsList() {
+  const list = document.getElementById('projectsList');
+  list.innerHTML = '';
+  state.projects.forEach((p, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Project ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('projects',${i})">×</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Project Name</label>
+          <input type="text" value="${p.name}" placeholder="E-commerce Platform" oninput="updateField('projects',${i},'name',this.value)" /></div>
+        <div class="form-group"><label>Project URL</label>
+          <input type="url" value="${p.url}" placeholder="https://..." oninput="updateField('projects',${i},'url',this.value)" /></div>
+      </div>
+      <div class="form-group"><label>Technologies Used</label>
+        <input type="text" value="${p.tech}" placeholder="React, Node.js, MongoDB" oninput="updateField('projects',${i},'tech',this.value)" /></div>
+      <div class="form-group"><label>Description</label>
+        <textarea oninput="updateField('projects',${i},'description',this.value)" placeholder="Describe what you built and its impact...">${p.description}</textarea>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  CERTIFICATIONS
+// ══════════════════════════════════════════════
+function addCert() {
+  state.certs.push({ name:'', issuer:'', date:'', url:'' });
+  renderCertsList();
+  updatePreview();
+}
+
+function renderCertsList() {
+  const list = document.getElementById('certsList');
+  list.innerHTML = '';
+  state.certs.forEach((c, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Certification ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('certs',${i})">×</button>
+      </div>
+      <div class="form-group"><label>Certification / Award Name</label>
+        <input type="text" value="${c.name}" placeholder="AWS Solutions Architect" oninput="updateField('certs',${i},'name',this.value)" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Issuing Organization</label>
+          <input type="text" value="${c.issuer}" placeholder="Amazon Web Services" oninput="updateField('certs',${i},'issuer',this.value)" /></div>
+        <div class="form-group"><label>Issue Date</label>
+          <input type="date" value="${c.date}" oninput="updateField('certs',${i},'date',this.value)" /></div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  LANGUAGES
+// ══════════════════════════════════════════════
+function addLanguage() {
+  state.languages.push({ name:'', level:'Conversational' });
+  renderLanguagesList();
+  updatePreview();
+}
+
+function renderLanguagesList() {
+  const list = document.getElementById('languagesList');
+  list.innerHTML = '';
+  state.languages.forEach((l, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Language ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('languages',${i})">×</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Language</label>
+          <input type="text" value="${l.name}" placeholder="Spanish" oninput="updateField('languages',${i},'name',this.value)" /></div>
+        <div class="form-group"><label>Proficiency</label>
+          <select onchange="updateField('languages',${i},'level',this.value)">
+            ${['Native','Fluent','Advanced','Intermediate','Conversational','Basic'].map(opt =>
+              `<option ${l.level===opt?'selected':''}>${opt}</option>`).join('')}
+          </select></div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  REFERENCES
+// ══════════════════════════════════════════════
+function addReference() {
+  state.references.push({ name:'', position:'', company:'', email:'', phone:'' });
+  renderReferencesList();
+  updatePreview();
+}
+
+function renderReferencesList() {
+  const list = document.getElementById('referencesList');
+  list.innerHTML = '';
+  state.references.forEach((r, i) => {
+    const card = document.createElement('div');
+    card.className = 'entry-card';
+    card.innerHTML = `
+      <div class="entry-card-header">
+        <span class="entry-card-title">Reference ${i+1}</span>
+        <button class="btn-remove-entry" onclick="removeEntry('references',${i})">×</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label>
+          <input type="text" value="${r.name}" placeholder="Jane Smith" oninput="updateField('references',${i},'name',this.value)" /></div>
+        <div class="form-group"><label>Position</label>
+          <input type="text" value="${r.position}" placeholder="Engineering Manager" oninput="updateField('references',${i},'position',this.value)" /></div>
+      </div>
+      <div class="form-group"><label>Company</label>
+        <input type="text" value="${r.company}" placeholder="Google" oninput="updateField('references',${i},'company',this.value)" /></div>
+      <div class="form-row">
+        <div class="form-group"><label>Email</label>
+          <input type="email" value="${r.email}" placeholder="jane@google.com" oninput="updateField('references',${i},'email',this.value)" /></div>
+        <div class="form-group"><label>Phone</label>
+          <input type="tel" value="${r.phone}" placeholder="+1 555 000" oninput="updateField('references',${i},'phone',this.value)" /></div>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════
+function updateField(key, idx, field, val) {
+  state[key][idx][field] = val;
+  updatePreview();
+}
+
+function removeEntry(key, idx) {
+  state[key].splice(idx, 1);
+  const renderFns = {
+    experience: renderExperienceList,
+    education: renderEducationList,
+    skills: renderSkillsList,
+    projects: renderProjectsList,
+    certs: renderCertsList,
+    languages: renderLanguagesList,
+    references: renderReferencesList
+  };
+  renderFns[key]?.();
+  updatePreview();
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+function langDots(level) {
+  const levels = { Native:5, Fluent:5, Advanced:4, Intermediate:3, Conversational:2, Basic:1 };
+  const n = levels[level] || 3;
+  return [1,2,3,4,5].map(i => `<div class="lang-dot ${i<=n?'filled':''}"></div>`).join('');
+}
+
+// ══════════════════════════════════════════════
+//  UPDATE PREVIEW
+// ══════════════════════════════════════════════
+function updatePreview() {
+  // Name & title
+  const first = document.getElementById('firstName').value;
+  const last  = document.getElementById('lastName').value;
+  const name  = (first + ' ' + last).trim() || 'Your Name';
+  document.getElementById('previewName').textContent = name;
+  document.getElementById('previewTitle').textContent = document.getElementById('jobTitle').value || 'Job Title';
+
+  // Photo
+  const previewPhoto = document.getElementById('previewPhoto');
+  if (state.photo) {
+    previewPhoto.src = state.photo;
+    previewPhoto.style.display = 'block';
+  } else {
+    previewPhoto.style.display = 'none';
+  }
+
+  // Contacts
+  const contacts = [];
+  const email   = document.getElementById('email').value;
+  const phone   = document.getElementById('phone').value;
+  const city    = document.getElementById('city').value;
+  const country = document.getElementById('country').value;
+  const linkedin = document.getElementById('linkedin').value;
+  const github   = document.getElementById('github').value;
+  const website  = document.getElementById('website').value;
+  if (email)   contacts.push(`<span class="resume-contact-item"><i class="fas fa-envelope"></i>${email}</span>`);
+  if (phone)   contacts.push(`<span class="resume-contact-item"><i class="fas fa-phone"></i>${phone}</span>`);
+  if (city||country) contacts.push(`<span class="resume-contact-item"><i class="fas fa-map-marker-alt"></i>${[city,country].filter(Boolean).join(', ')}</span>`);
+  if (linkedin) contacts.push(`<span class="resume-contact-item"><i class="fab fa-linkedin"></i>${linkedin}</span>`);
+  if (github)   contacts.push(`<span class="resume-contact-item"><i class="fab fa-github"></i>${github}</span>`);
+  if (website)  contacts.push(`<span class="resume-contact-item"><i class="fas fa-globe"></i>${website}</span>`);
+  document.getElementById('previewContacts').innerHTML = contacts.join('');
+
+  // Summary
+  const summaryText = document.getElementById('summary').value;
+  const showSummary = document.getElementById('showSummary').checked;
+  document.getElementById('sectionSummary').style.display = (showSummary && summaryText) ? '' : 'none';
+  document.getElementById('previewSummary').textContent = summaryText;
+
+  // Experience
+  const expHtml = state.experience.map(e => `
+    <div class="exp-entry">
+      <div class="exp-header">
+        <span class="exp-role">${e.role || 'Job Title'}</span>
+        <span class="exp-dates">${formatDate(e.startDate)} ${e.startDate?'–':''} ${e.current?'Present':formatDate(e.endDate)}</span>
+      </div>
+      <div class="exp-company">${[e.company, e.location].filter(Boolean).join(' · ')}</div>
+      <div class="exp-description">${e.description.replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+  document.getElementById('previewExperience').innerHTML = expHtml || '<p class="empty-section">Add work experience</p>';
+
+  // Education
+  const eduHtml = state.education.map(e => `
+    <div class="edu-entry">
+      <div class="edu-degree">${[e.degree, e.field].filter(Boolean).join(' in ') || 'Degree'}</div>
+      <div class="edu-school">${e.school || 'Institution'}</div>
+      <div class="edu-meta">${[e.startYear && e.endYear ? e.startYear+'–'+e.endYear : (e.startYear||e.endYear||''), e.gpa?'GPA: '+e.gpa:'', e.honors].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
+  document.getElementById('previewEducation').innerHTML = eduHtml || '<p class="empty-section">Add education</p>';
+
+  // Skills bars
+  const skillsHtml = state.skills.map(s => `
+    <div class="skill-bar-row">
+      <div class="skill-bar-label"><span>${s.name||'Skill'}</span><span>${s.level}%</span></div>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${s.level}%"></div></div>
+    </div>`).join('');
+  document.getElementById('previewSkills').innerHTML = skillsHtml || '<p class="empty-section">Add skills</p>';
+
+  // Core skills
+  const coreHtml = state.coreSkills.map(s => `<span class="sidebar-tag">${s}</span>`).join('');
+  document.getElementById('previewCoreSkills').innerHTML = coreHtml;
+  document.getElementById('sectionCore').style.display = state.coreSkills.length ? '' : 'none';
+
+  // Soft skills
+  const softHtml = state.softSkills.map(s => `<span class="sidebar-tag">${s}</span>`).join('');
+  document.getElementById('previewSoftSkills').innerHTML = softHtml;
+  document.getElementById('sectionSoft').style.display = state.softSkills.length ? '' : 'none';
+
+  // Languages
+  const langHtml = state.languages.map(l => `
+    <div class="lang-row">
+      <span>${l.name||'Language'}</span>
+      <div class="lang-level">${langDots(l.level)}</div>
+    </div>`).join('');
+  document.getElementById('previewLanguages').innerHTML = langHtml;
+  document.getElementById('sectionLanguages').style.display = state.languages.length ? '' : 'none';
+
+  // Certs
+  const showCerts = document.getElementById('showCerts').checked;
+  const certsHtml = state.certs.map(c => `
+    <div class="cert-item">
+      <div class="cert-name">${c.name||'Certification'}</div>
+      <div class="cert-issuer">${[c.issuer, c.date?formatDate(c.date):''].filter(Boolean).join(' · ')}</div>
+    </div>`).join('');
+  document.getElementById('previewCerts').innerHTML = certsHtml;
+  document.getElementById('sectionCerts').style.display = (showCerts && state.certs.length) ? '' : 'none';
+
+  // Projects
+  const showProjects = document.getElementById('showProjects').checked;
+  const projHtml = state.projects.map(p => `
+    <div class="project-item">
+      <div class="project-name">${p.name||'Project'} ${p.url?`<a href="${p.url}" style="color:var(--accent);font-size:.75rem;font-weight:400" target="_blank">↗ Link</a>`:''}</div>
+      <div class="project-tech">${p.tech.split(',').filter(Boolean).map(t=>`<span class="project-tech-tag">${t.trim()}</span>`).join('')}</div>
+      <div class="project-desc">${p.description}</div>
+    </div>`).join('');
+  document.getElementById('previewProjects').innerHTML = projHtml;
+  document.getElementById('sectionProjects').style.display = (showProjects && state.projects.length) ? '' : 'none';
+
+  // Interests
+  const showInterests = document.getElementById('showInterests').checked;
+  const interestsHtml = state.interests.map(i => `<span class="interest-chip">✦ ${i}</span>`).join('');
+  document.getElementById('previewInterests').innerHTML = interestsHtml;
+  document.getElementById('sectionInterests').style.display = (showInterests && state.interests.length) ? '' : 'none';
+
+  // References
+  const showRefs = document.getElementById('showReferences').checked;
+  const refOnRequest = document.getElementById('refOnRequest').checked;
+  let refHtml = '';
+  if (refOnRequest) {
+    refHtml = '<p style="font-style:italic;color:var(--silver);font-size:.84rem">Available upon request</p>';
+  } else {
+    refHtml = state.references.map(r => `
+      <div class="ref-item">
+        <div class="ref-name">${r.name||'Referee'}</div>
+        <div class="ref-position">${[r.position,r.company].filter(Boolean).join(' at ')}</div>
+        <div class="ref-contact">${[r.email,r.phone].filter(Boolean).join(' · ')}</div>
+      </div>`).join('');
+  }
+  document.getElementById('previewReferences').innerHTML = refHtml;
+  document.getElementById('sectionReferences').style.display = (showRefs && (state.references.length || refOnRequest)) ? '' : 'none';
+
+  updateCompletion();
+}
+
+// ══════════════════════════════════════════════
+//  COMPLETION
+// ══════════════════════════════════════════════
+function updateCompletion() {
+  const checks = [
+    !!document.getElementById('firstName').value,
+    !!document.getElementById('lastName').value,
+    !!document.getElementById('jobTitle').value,
+    !!document.getElementById('email').value,
+    !!document.getElementById('phone').value,
+    !!document.getElementById('summary').value,
+    state.experience.length > 0,
+    state.education.length > 0,
+    state.skills.length > 0,
+    !!state.photo
+  ];
+  const pct = Math.round(checks.filter(Boolean).length / checks.length * 100);
+  document.getElementById('completionFill').style.width = pct + '%';
+  document.getElementById('completionPct').textContent = pct + '% complete';
+}
+
+// ══════════════════════════════════════════════
+//  DESIGN
+// ══════════════════════════════════════════════
+function setTheme(theme, el) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  el.classList.add('active');
+  const paper = document.getElementById('resumePaper');
+  paper.className = paper.className.replace(/theme-\w+/, '');
+  paper.classList.add('theme-' + theme);
+  state.theme = theme;
+}
+
+function setFont(val) {
+  const paper = document.getElementById('resumePaper');
+  paper.className = paper.className.replace(/font-\w+/, '');
+  paper.classList.add(val);
+  state.font = val;
+}
+
+function setLayout(val) {
+  const paper = document.getElementById('resumePaper');
+  paper.className = paper.className.replace(/layout-\S+/, '');
+  paper.classList.add(val);
+  state.layout = val;
+}
+
+// ══════════════════════════════════════════════
+//  SAVE / LOAD
+// ══════════════════════════════════════════════
+async function saveResume() {
+  const resumeName = document.getElementById('resumeName').value || 'My Resume';
+  const data = {
+    firstName: document.getElementById('firstName').value,
+    lastName: document.getElementById('lastName').value,
+    jobTitle: document.getElementById('jobTitle').value,
+    email: document.getElementById('email').value,
+    phone: document.getElementById('phone').value,
+    city: document.getElementById('city').value,
+    country: document.getElementById('country').value,
+    linkedin: document.getElementById('linkedin').value,
+    github: document.getElementById('github').value,
+    website: document.getElementById('website').value,
+    dob: document.getElementById('dob').value,
+    nationality: document.getElementById('nationality').value,
+    marital: document.getElementById('marital').value,
+    summary: document.getElementById('summary').value,
+    coreSkills: state.coreSkills,
+    softSkills: state.softSkills,
+    interests: state.interests,
+    skills: state.skills,
+    experience: state.experience,
+    education: state.education,
+    projects: state.projects,
+    certs: state.certs,
+    languages: state.languages,
+    references: state.references,
+    theme: state.theme,
+    font: state.font,
+    layout: state.layout
+  };
+  try {
+    const method = state.currentId ? 'PUT' : 'POST';
+    const url = state.currentId ? `/api/resumes/${state.currentId}` : '/api/resumes';
+    const res = await fetch(url, {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: resumeName, data, photo: state.photo })
+    });
+    const json = await res.json();
+    if (!state.currentId) state.currentId = json.id;
+    showToast('✓ Resume saved successfully!', 'success');
+  } catch (err) {
+    showToast('⚠ Could not connect to server', 'error');
+  }
+}
+
+async function openModal() {
+  document.getElementById('savedModal').classList.add('open');
+  const list = document.getElementById('savedResumesList');
+  list.innerHTML = '<p style="color:var(--silver);text-align:center;padding:2rem">Loading…</p>';
+  try {
+    const res = await fetch('/api/resumes');
+    const resumes = await res.json();
+    if (!resumes.length) {
+      list.innerHTML = '<p style="color:var(--silver);text-align:center;padding:2rem;font-size:.88rem">No saved resumes yet.</p>';
+      return;
+    }
+    list.innerHTML = resumes.map(r => `
+      <div class="resume-list-item" onclick="loadResume(${r.id})">
+        <div>
+          <div class="resume-list-name">${r.name}</div>
+          <div class="resume-list-meta">Last edited: ${new Date(r.updated_at).toLocaleDateString()}</div>
+        </div>
+        <div class="resume-list-actions">
+          <button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteResume(${r.id},this.closest('.resume-list-item'))">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>`).join('');
+  } catch {
+    list.innerHTML = '<p style="color:var(--danger);text-align:center;padding:2rem">Failed to load resumes.</p>';
+  }
+}
+
+async function loadResume(id) {
+  try {
+    const res = await fetch('/api/resumes/' + id);
+    const resume = await res.json();
+    const d = resume.data;
+    state.currentId = id;
+    // Populate fields
+    ['firstName','lastName','jobTitle','email','phone','city','country','linkedin','github','website','dob','nationality','summary'].forEach(key => {
+      if (document.getElementById(key)) document.getElementById(key).value = d[key] || '';
+    });
+    document.getElementById('marital').value = d.marital || '';
+    document.getElementById('resumeName').value = resume.name;
+    // Arrays
+    ['coreSkills','softSkills','interests','skills','experience','education','projects','certs','languages','references'].forEach(key => {
+      state[key] = d[key] || [];
+    });
+    // Render all lists
+    renderExperienceList(); renderEducationList(); renderSkillsList();
+    renderProjectsList(); renderCertsList(); renderLanguagesList(); renderReferencesList();
+    // Tags
+    ['coreSkills','softSkills','interests'].forEach(key => {
+      const map = { coreSkills:['coreSkillsContainer','coreSkillInput'], softSkills:['softSkillsContainer','softSkillInput'], interests:['interestsContainer','interestInput'] };
+      renderTagsInContainer(...map[key], key);
+    });
+    // Photo
+    if (resume.photo) {
+      state.photo = resume.photo;
+      document.getElementById('photoPreview').src = state.photo;
+      document.getElementById('photoPreview').style.display = 'block';
+      document.getElementById('photoPlaceholder').style.display = 'none';
+      document.getElementById('removePhotoBtn').hidden = false;
+    }
+    // Theme
+    if (d.theme) { const sw = document.querySelector(`.color-swatch[title]`); setTheme(d.theme, document.querySelector('.color-swatch') || sw); }
+    if (d.font) { document.getElementById('fontStyle').value = d.font; setFont(d.font); }
+    if (d.layout) { document.getElementById('layoutStyle').value = d.layout; setLayout(d.layout); }
+    closeModal();
+    updatePreview();
+    showToast('Resume loaded!', 'success');
+  } catch (err) {
+    showToast('Failed to load resume', 'error');
+  }
+}
+
+async function deleteResume(id, el) {
+  if (!confirm('Delete this resume?')) return;
+  await fetch('/api/resumes/' + id, { method: 'DELETE' });
+  el.remove();
+  showToast('Deleted!', 'success');
+}
+
+function closeModal() { document.getElementById('savedModal').classList.remove('open'); }
+function closeModalOut(e) { if (e.target.id === 'savedModal') closeModal(); }
+
+function clearAll() {
+  if (!confirm('Start fresh? All unsaved data will be lost.')) return;
+  location.reload();
+}
+
+function printResume() { window.print(); }
+
+// ══════════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════════
+function showToast(msg, type='success') {
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<i class="fas ${type==='success'?'fa-check-circle':'fa-exclamation-circle'}"></i> ${msg}`;
+  document.getElementById('toastContainer').appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+updatePreview();
+</script>
+</body>
+</html>
